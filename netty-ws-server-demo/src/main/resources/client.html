@@ -7,10 +7,13 @@
     <title>WeChat Client</title>
 </head>
 <body>
+<input type="number" id="userId"/>
+<textarea id="msg"></textarea>
+<button onclick="sendMsg()">发送</button>
 </body>
 
 <script>
-    let ws = new WebSocket("ws://localhost:5455/ws?uid=120&token=120");
+    let ws = new WebSocket("ws://127.0.0.1:5455/ws?uid=120&token=120");
     ws.onopen = function () {
         ws.send("hello");
     };
@@ -26,6 +29,32 @@
     ws.onerror = function (evt) {
         console.log("error");
     };
+
+    function sendMsg() {
+        let userId = document.getElementById('userId').value;
+        let msg = document.getElementById('msg').value;
+        get('http://127.0.0.1:5454/msg/send?userId=' + userId + '&msg=' + msg, function (data) {
+        }, function (data) {
+        })
+    }
+
+    function get(url, successFuc, failFunc) {
+        const xhr = new XMLHttpRequest();
+        xhr.open("GET", url);
+        // xhr.setRequestHeader("Connection", "close");
+        xhr.send();
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                if (successFuc) {
+                    successFuc(xhr.responseText);
+                }
+            } else {
+                if (failFunc) {
+                    failFunc(xhr.responseText);
+                }
+            }
+        };
+    }
 </script>
 
 </html>

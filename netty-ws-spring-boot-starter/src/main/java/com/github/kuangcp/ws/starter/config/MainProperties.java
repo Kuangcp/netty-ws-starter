@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
 public class MainProperties {
 
     private Integer port;
-    private Integer maxContentLength = 65535;
+    private Integer maxContentLength = 4096;
     private Integer maxFrameSize = 65535;
     private String logLevel = "INFO";
 

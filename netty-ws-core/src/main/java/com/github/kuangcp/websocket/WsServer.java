@@ -61,9 +61,6 @@ public class WsServer {
     }
 
     public void start() {
-//        ScheduledExecutorService pool = Executors.newScheduledThreadPool(1);
-//        pool.scheduleAtFixedRate(ChannelSupervise::watchState, 5, 3, TimeUnit.SECONDS);
-
         log.info("正在启动WebSocket服务器...");
         NioEventLoopGroup boss = new NioEventLoopGroup();
         NioEventLoopGroup work = new NioEventLoopGroup();
