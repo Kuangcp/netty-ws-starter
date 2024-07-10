@@ -12,6 +12,7 @@
     <modules>
         <module>netty-ws-core</module>
         <module>netty-ws-spring-boot-starter</module>
+        <module>netty-ws-server-demo</module>
     </modules>
 
     <properties>
