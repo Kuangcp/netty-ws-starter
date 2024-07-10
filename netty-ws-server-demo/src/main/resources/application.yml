@@ -1,0 +1,7 @@
+server:
+  port: 5454
+
+netty-ws:
+  port: 5455
+  max-content-length: 4096
+  max-frame-size: 65536
