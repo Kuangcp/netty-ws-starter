@@ -6,6 +6,8 @@ import org.springframework.stereotype.Component;
 import java.util.Objects;
 
 /**
+ * 认证
+ *
  * @author <a href="https://github.com/kuangcp">Kuangcp</a>
  * 2024-07-10 14:41
  */
