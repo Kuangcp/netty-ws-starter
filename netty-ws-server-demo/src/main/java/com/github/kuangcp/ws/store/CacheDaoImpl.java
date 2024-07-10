@@ -45,7 +45,7 @@ public class CacheDaoImpl implements CacheDao {
     @Override
     public void pushQueueMsg(String host, QueueMsg msg) {
         try {
-            redisTemplate.opsForList().rightPush(queueKey, mapper.writeValueAsString(msg));
+            redisTemplate.opsForList().rightPush(queueKey + ":" + host, mapper.writeValueAsString(msg));
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
@@ -53,7 +53,7 @@ public class CacheDaoImpl implements CacheDao {
 
     @Override
     public QueueMsg pollQueueMsg(String host) {
-        Object msg = redisTemplate.opsForList().leftPop(queueKey);
+        Object msg = redisTemplate.opsForList().leftPop(queueKey + ":" + host);
         if (Objects.isNull(msg)) {
             return null;
         }

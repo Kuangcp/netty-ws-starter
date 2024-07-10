@@ -7,13 +7,26 @@
     <title>WeChat Client</title>
 </head>
 <body>
+<input id="host">
+<input id="uid">
+<br>
+
 <input type="number" id="userId"/>
 <textarea id="msg"></textarea>
 <button onclick="sendMsg()">发送</button>
 </body>
 
 <script>
-    let ws = new WebSocket("ws://127.0.0.1:5455/ws?uid=120&token=120");
+    let host = document.getElementById("host").value
+    if (!host) {
+        host = '127.0.0.1:5455'
+    }
+    let uid = document.getElementById('uid').value;
+    if (!uid) {
+        uid = '120'
+    }
+
+    let ws = new WebSocket("ws://" + host + "/ws?uid=" + uid + "&token=" + uid);
     ws.onopen = function () {
         ws.send("hello");
     };
