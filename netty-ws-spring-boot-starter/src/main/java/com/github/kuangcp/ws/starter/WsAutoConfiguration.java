@@ -1,8 +1,8 @@
-package com.github.kuangcp.websocket.starter;
+package com.github.kuangcp.ws.starter;
 
 import com.github.kuangcp.websocket.handler.AbstractBizHandler;
 import com.github.kuangcp.websocket.WsServer;
-import com.github.kuangcp.websocket.starter.config.MainProperties;
+import com.github.kuangcp.ws.starter.config.MainProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;

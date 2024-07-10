@@ -1,4 +1,4 @@
-package com.github.kuangcp.websocket.starter.config;
+package com.github.kuangcp.ws.starter.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

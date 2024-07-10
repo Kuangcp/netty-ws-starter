@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.github.kuangcp.websocket.starter.WsAutoConfiguration
+  com.github.kuangcp.ws.starter.WsAutoConfiguration
