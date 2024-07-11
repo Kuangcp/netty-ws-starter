@@ -1,7 +1,8 @@
 package com.github.kuangcp.websocket.handler;
 
 import com.github.kuangcp.websocket.WsMsgService;
-import com.github.kuangcp.websocket.Const;
+import com.github.kuangcp.websocket.WsServerConfig;
+import com.github.kuangcp.websocket.constants.Const;
 import com.github.kuangcp.websocket.msg.QueueMsg;
 import com.github.kuangcp.websocket.store.CacheDao;
 import com.github.kuangcp.websocket.store.UserDao;
@@ -24,6 +25,8 @@ import io.netty.handler.codec.http.websocketx.PongWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketHandshakeException;
+import io.netty.handler.timeout.IdleState;
+import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.util.CharsetUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -33,6 +36,7 @@ import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author <a href="https://github.com/kuangcp">Kuangcp</a>
@@ -43,14 +47,17 @@ public abstract class AbstractBizHandler extends SimpleChannelInboundHandler<Web
 
     protected static final Map<Long, Channel> userMap = new ConcurrentHashMap<>();
     protected static final Map<String, Long> channelUserMap = new ConcurrentHashMap<>();
+    private static final Map<String, AtomicInteger> idleMap = new ConcurrentHashMap<>();
 
+    final WsServerConfig config;
     final CacheDao cacheDao;
     final UserDao userDao;
     protected int pollBatch = 100;
 
-    public AbstractBizHandler(CacheDao cacheDao, UserDao userDao) {
+    public AbstractBizHandler(CacheDao cacheDao, UserDao userDao, WsServerConfig config) {
         this.cacheDao = cacheDao;
         this.userDao = userDao;
+        this.config = config;
     }
 
     public abstract boolean needAuth();
@@ -244,6 +251,24 @@ public abstract class AbstractBizHandler extends SimpleChannelInboundHandler<Web
             handSharkHttpRequest(ctx, (FullHttpRequest) msg);
         }
         super.channelRead(ctx, msg);
+    }
+
+    @Override
+    public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+        if (evt instanceof IdleStateEvent) {
+            IdleStateEvent event = (IdleStateEvent) evt;
+            if (event.state() == IdleState.READER_IDLE) {
+                String id = WsSocketUtil.id(ctx);
+                AtomicInteger cnt = idleMap.computeIfAbsent(id, v -> new AtomicInteger(0));
+                if (cnt.incrementAndGet() >= config.getReaderIdleCnt()) {
+                    log.warn("close idle channel: id={}", id);
+                    idleMap.remove(id);
+                    ctx.channel().close();
+                }
+            }
+        } else {
+            super.userEventTriggered(ctx, evt);
+        }
     }
 
     /**

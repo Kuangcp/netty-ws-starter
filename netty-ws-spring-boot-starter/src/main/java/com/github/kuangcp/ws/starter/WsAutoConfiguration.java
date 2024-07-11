@@ -2,7 +2,7 @@ package com.github.kuangcp.ws.starter;
 
 import com.github.kuangcp.websocket.handler.AbstractBizHandler;
 import com.github.kuangcp.websocket.WsServer;
-import com.github.kuangcp.ws.starter.config.MainProperties;
+import com.github.kuangcp.ws.starter.config.WsNettyServerConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -20,7 +20,7 @@ import java.util.Objects;
 public class WsAutoConfiguration {
 
     @Autowired
-    private MainProperties conf;
+    private WsNettyServerConfig conf;
 
     @Autowired(required = false)
     private AbstractBizHandler handler;
@@ -30,11 +30,10 @@ public class WsAutoConfiguration {
     public WsServer wsServer() {
         WsServer wsServer;
         if (Objects.nonNull(handler)) {
-            wsServer = new WsServer(conf.getPort(), conf.getMaxContentLength(),
-                    conf.getMaxFrameSize(), conf.getLogLevel(), handler);
+            wsServer = new WsServer(conf, handler);
         } else {
-            wsServer = new WsServer(conf.getPort(), conf.getMaxContentLength(),
-                    conf.getMaxFrameSize(), conf.getLogLevel());
+            // 不推荐，只能用于开发调试
+            wsServer = new WsServer(conf);
         }
 
         Thread thread = new Thread(wsServer::start);

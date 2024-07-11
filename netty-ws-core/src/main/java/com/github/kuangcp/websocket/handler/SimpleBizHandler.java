@@ -1,6 +1,7 @@
 package com.github.kuangcp.websocket.handler;
 
 
+import com.github.kuangcp.websocket.WsServerConfig;
 import com.github.kuangcp.websocket.store.CacheDao;
 import com.github.kuangcp.websocket.store.UserDao;
 import io.netty.channel.ChannelHandlerContext;
@@ -18,9 +19,8 @@ import java.util.concurrent.ScheduledExecutorService;
  */
 @Slf4j
 public class SimpleBizHandler extends AbstractBizHandler {
-
-    public SimpleBizHandler(CacheDao cacheDao, UserDao userDao, ScheduledExecutorService scheduler) {
-        super(cacheDao, userDao);
+    public SimpleBizHandler(CacheDao cacheDao, UserDao userDao, WsServerConfig config, ScheduledExecutorService scheduler) {
+        super(cacheDao, userDao, config);
 
         this.schedulerPollQueueMsg(scheduler);
     }

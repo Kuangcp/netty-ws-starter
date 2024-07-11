@@ -23,40 +23,40 @@ import java.util.concurrent.Executors;
 @Getter
 public class WsServer {
 
-    private final int port;
-    private int maxContentLength = 65535;
-    private int maxFrameSize = 65535;
-    private String logLevel = "INFO";
-    private AbstractBizHandler handler;
+    private final WsServerConfig config;
+    private final AbstractBizHandler handler;
 
-    public WsServer(int port) {
-        this.port = port;
+    /**
+     * 调试API
+     */
+    public WsServer() {
+        this.config = new WsServerConfig();
+        this.handler = new SimpleBizHandler(new CacheDaoImpl(), new UserDaoImpl(), config, Executors.newScheduledThreadPool(1));
     }
 
+    /**
+     * 调试API
+     */
     public WsServer(int port, String logLevel) {
-        this.port = port;
-        this.logLevel = logLevel;
+        this.config = new WsServerConfig().setPort(port).setLogLevel(logLevel);
+        this.handler = new SimpleBizHandler(new CacheDaoImpl(), new UserDaoImpl(), config, Executors.newScheduledThreadPool(1));
     }
 
-    public WsServer(int port, int maxContentLength, int maxFrameSize) {
-        this.port = port;
-        this.maxContentLength = maxContentLength;
-        this.maxFrameSize = maxFrameSize;
+    /**
+     * 调试API
+     */
+    public WsServer(WsServerConfig config) {
+        this.config = config;
+        this.handler = new SimpleBizHandler(new CacheDaoImpl(), new UserDaoImpl(), config, Executors.newScheduledThreadPool(1));
     }
 
-    public WsServer(int port, int maxContentLength, int maxFrameSize, String logLevel) {
-        this.port = port;
-        this.maxContentLength = maxContentLength;
-        this.maxFrameSize = maxFrameSize;
-        this.logLevel = logLevel;
-        this.handler = new SimpleBizHandler(new CacheDaoImpl(), new UserDaoImpl(), Executors.newScheduledThreadPool(1));
-    }
-
-    public WsServer(int port, int maxContentLength, int maxFrameSize, String logLevel, AbstractBizHandler handler) {
-        this.port = port;
-        this.maxContentLength = maxContentLength;
-        this.maxFrameSize = maxFrameSize;
-        this.logLevel = logLevel;
+    /**
+     * 实际应用API
+     *
+     * @param handler 业务handler
+     */
+    public WsServer(WsServerConfig config, AbstractBizHandler handler) {
+        this.config = config;
         this.handler = handler;
     }
 
@@ -69,7 +69,7 @@ public class WsServer {
             bootstrap.group(boss, work);
             bootstrap.channel(NioServerSocketChannel.class);
             bootstrap.childHandler(new WsChannelInitializer(this));
-            Channel channel = bootstrap.bind(port).sync().channel();
+            Channel channel = bootstrap.bind(config.getPort()).sync().channel();
             log.info("WebSocket服务器启动成功：{}", channel);
             channel.closeFuture().sync();
         } catch (InterruptedException e) {

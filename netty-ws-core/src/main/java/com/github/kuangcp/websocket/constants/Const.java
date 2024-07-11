@@ -1,4 +1,4 @@
-package com.github.kuangcp.websocket;
+package com.github.kuangcp.websocket.constants;
 
 /**
  *

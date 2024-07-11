@@ -6,6 +6,9 @@ netty-ws:
   port: 5455
   max-content-length: 4096
   max-frame-size: 65536
+  reader-idle-sec: 5
+  reader-idle-cnt: 3
+
 spring:
   redis:
     cluster:
