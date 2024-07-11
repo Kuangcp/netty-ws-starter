@@ -57,13 +57,11 @@ public class DemoHandler extends AbstractBizHandler {
     }
 }
 ```
-> 实现存储扩展 com.github.kuangcp.websocket.store.CacheDao 
-> 实现认证扩展 com.github.kuangcp.websocket.store.UserDao
+> 实现存储扩展 com.github.kuangcp.websocket.store.CacheDao  
+> 实现认证扩展 com.github.kuangcp.websocket.store.UserDao  
 
-然后启动项目使用客户端（js/java） [Js 测试客户端](/netty-ws-server-demo/src/main/resources/client.html)
-
-连接地址 ws://127.0.0.1:5455/ws?uid={uid}&token={token} 验证通信
-
-注意认证方式为HTTP握手时将Token传入url参数或者作为 HTTP Header，参数名都是token
+- 然后启动项目, 验证websocket通信。 可使用 [Js 测试客户端](/netty-ws-server-demo/src/main/resources/client.html) 测试
+    - 连接地址 `ws://127.0.0.1:5455/ws?uid={uid}&token={token}`
+    - 注意认证的实现方式为HTTP握手时，将Token作为url参数或者作为Header，参数名都是token
 
 
