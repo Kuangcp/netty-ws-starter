@@ -54,8 +54,10 @@
     <div class="box-row connect">
         <input id="host" placeholder="host:port" value="127.0.0.1:5455">
         <input id="uid" placeholder="uid" value="100">
+        <input id="heartSec" placeholder="heart beat sec" value="10000">
         <button onclick="connectWs()">连接</button>
         <button onclick="closeWs()">关闭</button>
+        <button onclick="stopTask()">关闭心跳</button>
     </div>
     <div class="box-row connect">
         <input type="number" id="userId" placeholder="uid"/>
@@ -68,6 +70,7 @@
 
 <script>
     var ws = null;
+    var heartTask = null;
 
     function connectWs() {
         let host = document.getElementById("host").value
@@ -75,6 +78,7 @@
         ws = new WebSocket("ws://" + host + "/ws?uid=" + uid + "&token=" + uid);
         ws.onopen = function () {
             ws.send("hello");
+            startTask();
         };
 
         ws.onmessage = function (evt) {
@@ -100,6 +104,22 @@
         if (ws) {
             ws.close()
         }
+    }
+
+
+    function startTask() {
+        let heartSec = document.getElementById("heartSec").value
+        if (!heartSec || heartSec === "0") {
+            return;
+        }
+        heartTask = setInterval(function () {
+            ws.send('ping')
+        }, heartSec)
+    }
+
+    function stopTask() {
+        clearInterval(heartTask)
+        heartTask = null;
     }
 
     function sendMsg() {
