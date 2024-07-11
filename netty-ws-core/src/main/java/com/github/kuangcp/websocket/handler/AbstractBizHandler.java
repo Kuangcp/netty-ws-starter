@@ -147,7 +147,8 @@ public abstract class AbstractBizHandler extends SimpleChannelInboundHandler<Web
 
     @Override
     public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
-        ctx.flush();
+        // 调用此方法才会进入 IdleStateHandler 的 channelReadComplete 方法
+        ctx.fireChannelReadComplete();
     }
 
     /**

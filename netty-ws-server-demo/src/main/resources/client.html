@@ -112,8 +112,10 @@
         if (!heartSec || heartSec === "0") {
             return;
         }
+        let x = 0
         heartTask = setInterval(function () {
-            ws.send('ping')
+            x++;
+            ws.send('ping' + x)
         }, heartSec)
     }
 
