@@ -20,7 +20,9 @@ import java.util.concurrent.ScheduledExecutorService;
 public class SimpleBizHandler extends AbstractBizHandler {
 
     public SimpleBizHandler(CacheDao cacheDao, UserDao userDao, ScheduledExecutorService scheduler) {
-        super(cacheDao, userDao, scheduler);
+        super(cacheDao, userDao);
+
+        this.schedulerPollQueueMsg(scheduler);
     }
 
     @Override

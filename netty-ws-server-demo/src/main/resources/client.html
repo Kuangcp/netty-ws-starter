@@ -4,44 +4,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WeChat Client</title>
+    <title>Websocket Client</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .box-row {
+            display: flex;
+            flex-direction: row;
+        }
+
+        .box-col {
+            display: flex;
+            flex-direction: column;
+        }
+
+        main {
+            margin-top: 10px;
+        }
+
+        .connect {
+            margin-bottom: 10px;
+            height: 30px;
+        }
+
+        .receiver {
+            margin-top: 10px;
+            margin-bottom: 10px;
+            width: 800px;
+            height: 500px;
+            overflow-y: auto;
+        }
+    </style>
 </head>
 <body>
-<input id="host">
-<input id="uid">
-<br>
+<main class="box-col">
+    <div class="box-col receiver" id="receiver">
+        <div id='msgList'></div>
+    </div>
+    <div class="box-row connect">
+        <input id="host" placeholder="host:port" value="127.0.0.1:5455">
+        <input id="uid" placeholder="uid" value="100">
+        <button onclick="connectWs()">连接</button>
+        <button onclick="closeWs()">关闭</button>
+    </div>
+    <div class="box-row connect">
+        <input type="number" id="userId" placeholder="uid"/>
+        <textarea id="msg" placeholder="msg"></textarea>
+        <button onclick="sendMsg()">发送</button>
+    </div>
+</main>
 
-<input type="number" id="userId"/>
-<textarea id="msg"></textarea>
-<button onclick="sendMsg()">发送</button>
 </body>
 
 <script>
-    let host = document.getElementById("host").value
-    if (!host) {
-        host = '127.0.0.1:5455'
+    var ws = null;
+
+    function connectWs() {
+        let host = document.getElementById("host").value
+        let uid = document.getElementById('uid').value;
+        ws = new WebSocket("ws://" + host + "/ws?uid=" + uid + "&token=" + uid);
+        ws.onopen = function () {
+            ws.send("hello");
+        };
+
+        ws.onmessage = function (evt) {
+            // console.log(evt.data)
+            let div = document.createElement("div");
+            // div.setAttribute('className', 'box-row')
+            div.innerText = evt.data;
+            let list = document.getElementById('msgList');
+            list.appendChild(div)
+            document.getElementById('receiver').scrollTop = list.clientHeight;
+        };
+
+        ws.onclose = function (evt) {
+            console.log("error");
+        };
+
+        ws.onerror = function (evt) {
+            console.log("error");
+        };
     }
-    let uid = document.getElementById('uid').value;
-    if (!uid) {
-        uid = '120'
+
+    function closeWs() {
+        if (ws) {
+            ws.close()
+        }
     }
-
-    let ws = new WebSocket("ws://" + host + "/ws?uid=" + uid + "&token=" + uid);
-    ws.onopen = function () {
-        ws.send("hello");
-    };
-
-    ws.onmessage = function (evt) {
-        console.log(evt.data)
-    };
-
-    ws.onclose = function (evt) {
-        console.log("error");
-    };
-
-    ws.onerror = function (evt) {
-        console.log("error");
-    };
 
     function sendMsg() {
         let userId = document.getElementById('userId').value;

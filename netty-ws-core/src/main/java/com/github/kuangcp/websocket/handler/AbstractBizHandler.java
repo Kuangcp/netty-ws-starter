@@ -46,14 +46,11 @@ public abstract class AbstractBizHandler extends SimpleChannelInboundHandler<Web
 
     final CacheDao cacheDao;
     final UserDao userDao;
-    final ScheduledExecutorService scheduler;
+    protected int pollBatch = 100;
 
-    public AbstractBizHandler(CacheDao cacheDao, UserDao userDao, ScheduledExecutorService scheduler) {
+    public AbstractBizHandler(CacheDao cacheDao, UserDao userDao) {
         this.cacheDao = cacheDao;
         this.userDao = userDao;
-        this.scheduler = scheduler;
-
-        this.handleQueueMsg();
     }
 
     public abstract boolean needAuth();
@@ -91,11 +88,11 @@ public abstract class AbstractBizHandler extends SimpleChannelInboundHandler<Web
         }
     }
 
-    private void handleQueueMsg() {
+    protected void schedulerPollQueueMsg(ScheduledExecutorService scheduler) {
         // 定时消费 需要推送的消息
         String hostIp = IpUtils.getHostIp();
         scheduler.scheduleAtFixedRate(() -> {
-            for (int i = 0; i < 100; i++) {
+            for (int i = 0; i < pollBatch; i++) {
                 QueueMsg msg = cacheDao.pollQueueMsg(hostIp);
                 if (Objects.isNull(msg)) {
                     return;

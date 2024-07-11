@@ -20,7 +20,10 @@ import java.util.concurrent.Executors;
 public class DemoHandler extends AbstractBizHandler {
 
     public DemoHandler(CacheDao cacheDao, UserDao userDao) {
-        super(cacheDao, userDao, Executors.newScheduledThreadPool(1));
+        super(cacheDao, userDao);
+
+        this.pollBatch = 500;
+        this.schedulerPollQueueMsg(Executors.newScheduledThreadPool(1));
     }
 
     @Override

@@ -1,4 +1,4 @@
-# websocket netty
+# netty websocket starter
 
 ## Quick Start
 [Demo 项目](/netty-ws-server-demo)
@@ -30,7 +30,9 @@ netty-ws:
 public class DemoHandler extends AbstractBizHandler {
 
     public DemoHandler(CacheDao cacheDao, UserDao userDao) {
-        super(cacheDao, userDao, Executors.newScheduledThreadPool(1));
+        super(cacheDao, userDao);
+        
+        this.schedulerPollQueueMsg(Executors.newScheduledThreadPool(1));
     }
 
     @Override
@@ -65,3 +67,10 @@ public class DemoHandler extends AbstractBizHandler {
     - 注意认证的实现方式为HTTP握手时，将Token作为url参数或者作为Header，参数名都是token
 
 
+## 设计思路
+Netty作为通信基础，每个用户连接时通过前置的Nginx等SLB层负载均衡到WS集群。
+
+1. 用户和主机ip关系绑定到Redis map结构中
+1. 每个主机ip绑定一个Redis的list队列，存放了其他节点写入的消息数据，解决应用层向用户推送消息时，用户连接随机分散的问题。
+
+注意：Redis可替换成任意中心存储, 已由 CacheDao 抽象，应用层自己实现。
