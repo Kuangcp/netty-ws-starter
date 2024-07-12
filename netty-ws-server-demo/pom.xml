@@ -17,6 +17,7 @@
         <maven.deploy.skip>true</maven.deploy.skip>
 
         <boot.version>2.3.12.RELEASE</boot.version>
+        <ws.starter.version>1.0.2-RELEASE</ws.starter.version>
     </properties>
 
     <dependencies>
@@ -100,7 +101,7 @@
         <dependency>
             <groupId>com.github.kuangcp</groupId>
             <artifactId>netty-ws-spring-boot-starter</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>${ws.starter.version}</version>
             <exclusions>
                 <exclusion>
                     <artifactId>slf4j-api</artifactId>
