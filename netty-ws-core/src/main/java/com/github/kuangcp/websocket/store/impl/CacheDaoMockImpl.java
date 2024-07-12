@@ -14,7 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author <a href="https://github.com/kuangcp">Kuangcp</a>
  * 2024-07-10 14:36
  */
-public class CacheDaoImpl implements CacheDao {
+public class CacheDaoMockImpl implements CacheDao {
 
     private final Map<String, List<QueueMsg>> queueCache = new ConcurrentHashMap<>();
     private final Map<Long, String> userRoute = new ConcurrentHashMap<>();

@@ -15,11 +15,13 @@ import java.util.Objects;
 public class UserDaoImpl implements UserDao {
     @Override
     public boolean validUserId(Long userId) {
-        return false;
+        //todo query db to validate
+        return true;
     }
 
     @Override
     public boolean validUserId(Long userId, String token) {
+        //todo query db and parse token
         return Objects.equals(userId + "", token);
     }
 }

@@ -6,6 +6,8 @@ import com.github.kuangcp.websocket.constants.Const;
 import com.github.kuangcp.websocket.msg.QueueMsg;
 import com.github.kuangcp.websocket.store.CacheDao;
 import com.github.kuangcp.websocket.store.UserDao;
+import com.github.kuangcp.websocket.store.impl.CacheDaoMockImpl;
+import com.github.kuangcp.websocket.store.impl.UserDaoMockImpl;
 import com.github.kuangcp.websocket.util.IpUtils;
 import com.github.kuangcp.websocket.util.WsSocketUtil;
 import io.netty.buffer.ByteBuf;
@@ -54,6 +56,12 @@ public abstract class AbstractBizHandler extends SimpleChannelInboundHandler<Web
     final WsServerConfig config;
     final CacheDao cacheDao;
     final UserDao userDao;
+
+    public AbstractBizHandler(WsServerConfig config) {
+        this.cacheDao = new CacheDaoMockImpl();
+        this.userDao = new UserDaoMockImpl();
+        this.config = config;
+    }
 
     public AbstractBizHandler(CacheDao cacheDao, UserDao userDao, WsServerConfig config) {
         this.cacheDao = cacheDao;

@@ -2,16 +2,14 @@ package com.github.kuangcp.websocket;
 
 import com.github.kuangcp.websocket.handler.AbstractBizHandler;
 import com.github.kuangcp.websocket.handler.SingletonBizHandler;
-import com.github.kuangcp.websocket.store.impl.CacheDaoImpl;
-import com.github.kuangcp.websocket.store.impl.UserDaoImpl;
+import com.github.kuangcp.websocket.store.impl.CacheDaoMockImpl;
+import com.github.kuangcp.websocket.store.impl.UserDaoMockImpl;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.concurrent.Executors;
 
 /**
  * 客户端使用 client.html
@@ -31,7 +29,7 @@ public class WsServer {
      */
     public WsServer() {
         this.config = new WsServerConfig();
-        this.handler = new SingletonBizHandler(new CacheDaoImpl(), new UserDaoImpl(), config);
+        this.handler = new SingletonBizHandler(config);
     }
 
     /**
@@ -39,7 +37,7 @@ public class WsServer {
      */
     public WsServer(int port, String logLevel) {
         this.config = new WsServerConfig().setPort(port).setLogLevel(logLevel);
-        this.handler = new SingletonBizHandler(new CacheDaoImpl(), new UserDaoImpl(), config);
+        this.handler = new SingletonBizHandler(config);
     }
 
     /**
@@ -47,7 +45,7 @@ public class WsServer {
      */
     public WsServer(WsServerConfig config) {
         this.config = config;
-        this.handler = new SingletonBizHandler(new CacheDaoImpl(), new UserDaoImpl(), config);
+        this.handler = new SingletonBizHandler(config);
     }
 
     /**

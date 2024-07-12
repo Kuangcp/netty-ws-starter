@@ -4,6 +4,7 @@ package com.github.kuangcp.websocket.handler;
 import com.github.kuangcp.websocket.WsServerConfig;
 import com.github.kuangcp.websocket.store.CacheDao;
 import com.github.kuangcp.websocket.store.UserDao;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.websocketx.CloseWebSocketFrame;
@@ -20,9 +21,10 @@ import java.util.concurrent.ScheduledExecutorService;
  * @author <a href="https://github.com/kuangcp">Kuangcp</a> on 2021-05-18 08:33
  */
 @Slf4j
+@ChannelHandler.Sharable
 public class SingletonBizHandler extends AbstractBizHandler {
-    public SingletonBizHandler(CacheDao cacheDao, UserDao userDao, WsServerConfig config) {
-        super(cacheDao, userDao, config);
+    public SingletonBizHandler(WsServerConfig config) {
+        super(config);
 
 //        this.schedulerPollQueueMsg(scheduler);
     }
