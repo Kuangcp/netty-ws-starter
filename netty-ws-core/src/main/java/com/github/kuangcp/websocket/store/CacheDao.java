@@ -2,6 +2,8 @@ package com.github.kuangcp.websocket.store;
 
 import com.github.kuangcp.websocket.msg.QueueMsg;
 
+import java.util.List;
+
 /**
  * @author <a href="https://github.com/kuangcp">Kuangcp</a>
  * 2024-07-10 14:34
@@ -16,5 +18,5 @@ public interface CacheDao {
 
     void pushQueueMsg(String host, QueueMsg msg);
 
-    QueueMsg pollQueueMsg(String host);
+    List<QueueMsg> pollQueueMsg(String host);
 }

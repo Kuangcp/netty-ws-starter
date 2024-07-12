@@ -133,7 +133,7 @@
     function sendMsg() {
         let userId = document.getElementById('userId').value;
         let msg = document.getElementById('msg').value;
-        get('http://127.0.0.1:5454/msg/send?userId=' + userId + '&msg=' + msg, function (data) {
+        get('http://192.168.16.214:5454/msg/send?userId=' + userId + '&msg=' + msg, function (data) {
         }, function (data) {
         })
     }

@@ -25,7 +25,6 @@ public class DemoHandler extends AbstractBizHandler {
     public DemoHandler(CacheDao cacheDao, UserDao userDao, WsServerConfig config) {
         super(cacheDao, userDao, config);
 
-        this.pollBatch = 500;
         this.schedulerPollQueueMsg(Executors.newScheduledThreadPool(1));
     }
 

@@ -3,6 +3,8 @@ package com.github.kuangcp.websocket.store.impl;
 import com.github.kuangcp.websocket.msg.QueueMsg;
 import com.github.kuangcp.websocket.store.CacheDao;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -14,7 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class CacheDaoImpl implements CacheDao {
 
-    private Map<String, QueueMsg> queueCache = new ConcurrentHashMap<>();
+    private Map<String, List<QueueMsg>> queueCache = new ConcurrentHashMap<>();
     private Map<Long, String> userRoute = new ConcurrentHashMap<>();
 
     @Override
@@ -34,11 +36,12 @@ public class CacheDaoImpl implements CacheDao {
 
     @Override
     public void pushQueueMsg(String host, QueueMsg msg) {
-        queueCache.put(host, msg);
+        List<QueueMsg> queue = queueCache.computeIfAbsent(host, v -> new ArrayList<>());
+        queue.add(msg);
     }
 
     @Override
-    public QueueMsg pollQueueMsg(String host) {
+    public List<QueueMsg> pollQueueMsg(String host) {
         return queueCache.get(host);
     }
 }

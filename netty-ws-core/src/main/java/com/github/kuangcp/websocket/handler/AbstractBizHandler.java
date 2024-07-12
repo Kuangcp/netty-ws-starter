@@ -32,6 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
@@ -53,7 +54,6 @@ public abstract class AbstractBizHandler extends SimpleChannelInboundHandler<Web
     final WsServerConfig config;
     final CacheDao cacheDao;
     final UserDao userDao;
-    protected int pollBatch = 100;
 
     public AbstractBizHandler(CacheDao cacheDao, UserDao userDao, WsServerConfig config) {
         this.cacheDao = cacheDao;
@@ -98,13 +98,17 @@ public abstract class AbstractBizHandler extends SimpleChannelInboundHandler<Web
         // 定时消费 需要推送的消息
         String hostIp = IpUtils.getHostIp();
         scheduler.scheduleAtFixedRate(() -> {
-            for (int i = 0; i < pollBatch; i++) {
-                QueueMsg msg = cacheDao.pollQueueMsg(hostIp);
-                if (Objects.isNull(msg)) {
+            try {
+                List<QueueMsg> msgList = cacheDao.pollQueueMsg(hostIp);
+                if (Objects.isNull(msgList) || msgList.isEmpty()) {
                     return;
                 }
-                log.debug("read: userId={}", msg.getUserId());
-                pushTxtMsg(msg.getUserId(), msg.getMsg());
+                for (QueueMsg msg : msgList) {
+                    log.debug("read: userId={}", msg.getUserId());
+                    pushTxtMsg(msg.getUserId(), msg.getMsg());
+                }
+            } catch (Exception e) {
+                log.error("", e);
             }
         }, 10, 1, TimeUnit.SECONDS);
     }
