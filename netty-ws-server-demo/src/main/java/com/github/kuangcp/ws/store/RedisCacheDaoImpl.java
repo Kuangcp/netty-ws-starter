@@ -17,7 +17,7 @@ import java.util.Objects;
  * 2024-07-10 14:41
  */
 @Component
-public class CacheDaoImpl implements CacheDao {
+public class RedisCacheDaoImpl implements CacheDao {
 
     @Autowired
     private RedisTemplate redisTemplate;

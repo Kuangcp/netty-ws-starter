@@ -72,6 +72,11 @@
     var ws = null;
     var heartTask = null;
 
+    function now() {
+        let d = new Date();
+        return `${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}.${d.getMilliseconds()}`;
+    }
+
     function connectWs() {
         let host = document.getElementById("host").value
         let uid = document.getElementById('uid').value;
@@ -85,7 +90,8 @@
             // console.log(evt.data)
             let div = document.createElement("div");
             // div.setAttribute('className', 'box-row')
-            div.innerText = evt.data;
+
+            div.innerText = now() + ': ' + evt.data;
             let list = document.getElementById('msgList');
             list.appendChild(div)
             document.getElementById('receiver').scrollTop = list.clientHeight;

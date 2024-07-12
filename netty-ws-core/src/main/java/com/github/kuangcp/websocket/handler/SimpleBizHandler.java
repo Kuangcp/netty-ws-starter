@@ -53,10 +53,6 @@ public class SimpleBizHandler extends AbstractBizHandler {
         super.handSharkHttpRequest(ctx, request);
     }
 
-    @Override
-    public boolean needAuth() {
-        return false;
-    }
 
     @Override
     public void connectSuccess(Long userId) {

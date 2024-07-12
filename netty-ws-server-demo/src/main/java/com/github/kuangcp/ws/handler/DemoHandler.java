@@ -51,9 +51,4 @@ public class DemoHandler extends AbstractBizHandler {
     protected void handSharkHttpRequest(ChannelHandlerContext ctx, FullHttpRequest request) {
         super.handSharkHttpRequest(ctx, request);
     }
-
-    @Override
-    public boolean needAuth() {
-        return true;
-    }
 }

@@ -26,5 +26,10 @@ public class WsServerConfig {
      * <p>
      * 即：客户端2min未发送消息到服务端
      */
-    private int readerIdleCnt = 2;
+    private int readerIdleThreshold = 2;
+
+    /**
+     * 限制建立ws连接需通过认证
+     */
+    private Boolean connectAuth;
 }

@@ -29,6 +29,7 @@ import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.util.CharsetUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Map;
@@ -59,8 +60,6 @@ public abstract class AbstractBizHandler extends SimpleChannelInboundHandler<Web
         this.userDao = userDao;
         this.config = config;
     }
-
-    public abstract boolean needAuth();
 
     public abstract void connectSuccess(Long userId);
 
@@ -108,22 +107,6 @@ public abstract class AbstractBizHandler extends SimpleChannelInboundHandler<Web
                 pushTxtMsg(msg.getUserId(), msg.getMsg());
             }
         }, 10, 1, TimeUnit.SECONDS);
-
-        // 清理过时映射的连接
-        scheduler.scheduleAtFixedRate(() -> {
-            for (Map.Entry<Long, Channel> entry : userMap.entrySet()) {
-                Long userId = entry.getKey();
-                String host = cacheDao.getRouteHost(userId);
-                // 关闭时会触发 channelInactive
-                if (Objects.isNull(host) || !Objects.equals(host, hostIp)) {
-                    log.info("confuse: userId={}", userId);
-                    String id = entry.getValue().id().asShortText();
-                    channelUserMap.remove(id);
-                    entry.getValue().close();
-                    userMap.remove(userId);
-                }
-            }
-        }, 2, 1, TimeUnit.MINUTES);
     }
 
 
@@ -184,7 +167,7 @@ public abstract class AbstractBizHandler extends SimpleChannelInboundHandler<Web
             throw new WebSocketHandshakeException("no auth");
         }
 
-        if (needAuth()) {
+        if (BooleanUtils.isTrue(config.getConnectAuth())) {
             String token = params.get("token");
             if (StringUtils.isBlank(token)) {
                 HttpHeaders headers = request.trailingHeaders();
@@ -261,7 +244,7 @@ public abstract class AbstractBizHandler extends SimpleChannelInboundHandler<Web
             if (event.state() == IdleState.READER_IDLE) {
                 String id = WsSocketUtil.id(ctx);
                 AtomicInteger cnt = idleMap.computeIfAbsent(id, v -> new AtomicInteger(0));
-                if (cnt.incrementAndGet() >= config.getReaderIdleCnt()) {
+                if (cnt.incrementAndGet() >= config.getReaderIdleThreshold()) {
                     log.warn("close idle channel: id={}", id);
                     idleMap.remove(id);
                     ctx.channel().close();

@@ -20,7 +20,9 @@ netty-ws:
   port: 5455
   max-content-length: 4096
   max-frame-size: 65536
-
+  reader-idle-sec: 60
+  reader-idle-threshold: 2
+  connect-auth: true
 ```
 
 > 自定义连接处理类
@@ -29,33 +31,27 @@ netty-ws:
 @ChannelHandler.Sharable
 public class DemoHandler extends AbstractBizHandler {
 
-    public DemoHandler(CacheDao cacheDao, UserDao userDao) {
-        super(cacheDao, userDao);
-        
+    public DemoHandler(CacheDao cacheDao, UserDao userDao, WsServerConfig config) {
+        super(cacheDao, userDao, config);
         this.schedulerPollQueueMsg(Executors.newScheduledThreadPool(1));
     }
 
     @Override
     public void connectSuccess(Long userId) {
-        System.out.println("connected " + userId);
+        log.info("connected {}", userId);
     }
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         String id = WsSocketUtil.id(ctx);
         Long userId = channelUserMap.get(id);
-        System.out.println("disconnect " + userId);
+        log.info("disconnect {}", userId);
         super.channelInactive(ctx);
     }
 
     @Override
     protected void handSharkHttpRequest(ChannelHandlerContext ctx, FullHttpRequest request) {
         super.handSharkHttpRequest(ctx, request);
-    }
-
-    @Override
-    public boolean needAuth() {
-        return true;
     }
 }
 ```
