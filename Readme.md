@@ -1,16 +1,29 @@
 # netty websocket starter
 
 ## Quick Start
+
 [Demo 项目](/netty-ws-server-demo)
 
 > 添加依赖
 
 ```xml
-    <dependency>
-        <groupId>com.github.kuangcp</groupId>
-        <artifactId>netty-ws-spring-boot-starter</artifactId>
-        <version>x.x.x</version>
-    </dependency>
+<!--添加源-->
+<repository>
+    <id>github</id>
+    <url>https://maven.pkg.github.com</url>
+    <snapshots>
+        <enabled>true</enabled>
+    </snapshots>
+</repository>
+```
+
+```xml
+
+<dependency>
+    <groupId>com.github.kuangcp</groupId>
+    <artifactId>netty-ws-spring-boot-starter</artifactId>
+    <version>1.0.2-RELEASE</version>
+</dependency>
 ```
 
 > 基础配置
@@ -26,7 +39,9 @@ netty-ws:
 ```
 
 > 自定义连接处理类
+
 ```java
+
 @Component
 @ChannelHandler.Sharable
 public class DemoHandler extends AbstractBizHandler {
@@ -55,15 +70,16 @@ public class DemoHandler extends AbstractBizHandler {
     }
 }
 ```
+
 > 实现存储扩展 com.github.kuangcp.websocket.store.CacheDao  
-> 实现认证扩展 com.github.kuangcp.websocket.store.UserDao  
+> 实现认证扩展 com.github.kuangcp.websocket.store.UserDao
 
 - 然后启动项目, 验证websocket通信。 可使用 [Js 测试客户端](/netty-ws-server-demo/src/main/resources/client.html) 测试
     - 连接地址 `ws://127.0.0.1:5455/ws?uid={uid}&token={token}`
     - 注意认证的实现方式为HTTP握手时，将Token作为url参数或者作为Header，参数名都是token
 
-
 ## 设计思路
+
 Netty作为通信基础，每个用户连接时通过前置的Nginx等SLB层负载均衡到WS集群。
 
 1. 用户和主机ip关系绑定到Redis map结构中

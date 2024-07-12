@@ -6,7 +6,7 @@
 
     <groupId>com.github.kuangcp</groupId>
     <artifactId>netty-ws-server-demo</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.4-RELEASE</version>
 
     <properties>
         <java.version>1.8</java.version>
@@ -17,7 +17,8 @@
         <maven.deploy.skip>true</maven.deploy.skip>
 
         <boot.version>2.3.12.RELEASE</boot.version>
-        <ws.starter.version>1.0.2-RELEASE</ws.starter.version>
+        <ws.starter.version>1.0.4-RELEASE</ws.starter.version>
+
     </properties>
 
     <dependencies>
@@ -101,7 +102,7 @@
         <dependency>
             <groupId>com.github.kuangcp</groupId>
             <artifactId>netty-ws-spring-boot-starter</artifactId>
-            <version>${ws.starter.version}</version>
+            <version>1.0.4-RELEASE</version>
             <exclusions>
                 <exclusion>
                     <artifactId>slf4j-api</artifactId>

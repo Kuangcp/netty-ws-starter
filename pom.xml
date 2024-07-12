@@ -6,7 +6,7 @@
 
     <groupId>com.github.kuangcp</groupId>
     <artifactId>netty-ws</artifactId>
-    <version>${ws-starter.version}</version>
+    <version>1.0.4-RELEASE</version>
 
     <packaging>pom</packaging>
     <modules>
@@ -22,7 +22,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <spring-boot.version>2.3.12.RELEASE</spring-boot.version>
-        <ws-starter.version>1.0.2-RELEASE</ws-starter.version>
     </properties>
 
     <dependencies>
