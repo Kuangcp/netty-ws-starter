@@ -28,14 +28,14 @@ public class SingletonBizHandler extends AbstractBizHandler {
     }
 
     @Override
-    void closeWebSocketFrameHandler(ChannelHandlerContext ctx, CloseWebSocketFrame frame) {
+    public void closeWebSocketFrameHandler(ChannelHandlerContext ctx, CloseWebSocketFrame frame) {
         log.info("close connection");
         super.closeWebSocketFrameHandler(ctx, frame);
     }
 
 
     @Override
-    void textWebSocketFrameHandler(ChannelHandlerContext ctx, TextWebSocketFrame frame) {
+    public void textWebSocketFrameHandler(ChannelHandlerContext ctx, TextWebSocketFrame frame) {
         String text = frame.text();
         if (Objects.equals(text, "ping")) {
             System.out.println("text ping");
@@ -45,7 +45,7 @@ public class SingletonBizHandler extends AbstractBizHandler {
     }
 
     @Override
-    void pingWebSocketFrameHandler(ChannelHandlerContext ctx, PingWebSocketFrame frame) {
+    public void pingWebSocketFrameHandler(ChannelHandlerContext ctx, PingWebSocketFrame frame) {
         log.info("ping");
         super.pingWebSocketFrameHandler(ctx, frame);
     }

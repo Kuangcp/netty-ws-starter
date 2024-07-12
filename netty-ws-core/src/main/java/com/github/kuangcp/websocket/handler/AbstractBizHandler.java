@@ -262,21 +262,21 @@ public abstract class AbstractBizHandler extends SimpleChannelInboundHandler<Web
     /**
      * 客户端发送断开请求处理
      */
-    void closeWebSocketFrameHandler(ChannelHandlerContext ctx, CloseWebSocketFrame frame) {
+    protected void closeWebSocketFrameHandler(ChannelHandlerContext ctx, CloseWebSocketFrame frame) {
         ctx.close();
     }
 
     /**
      * 创建连接之后，客户端发送的消息都会在这里处理
      */
-    void textWebSocketFrameHandler(ChannelHandlerContext ctx, TextWebSocketFrame frame) {
+    protected void textWebSocketFrameHandler(ChannelHandlerContext ctx, TextWebSocketFrame frame) {
         ctx.channel().writeAndFlush(frame.retain());
     }
 
     /**
      * 处理客户端心跳包
      */
-    void pingWebSocketFrameHandler(ChannelHandlerContext ctx, PingWebSocketFrame frame) {
+    protected void pingWebSocketFrameHandler(ChannelHandlerContext ctx, PingWebSocketFrame frame) {
         ctx.channel().writeAndFlush(new PongWebSocketFrame(frame.content().retain()));
     }
 }

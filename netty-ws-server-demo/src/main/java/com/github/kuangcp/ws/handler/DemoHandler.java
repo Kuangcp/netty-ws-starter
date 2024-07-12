@@ -8,6 +8,8 @@ import com.github.kuangcp.websocket.util.WsSocketUtil;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.FullHttpRequest;
+import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
+import io.netty.handler.codec.http.websocketx.WebSocketFrame;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -49,5 +51,10 @@ public class DemoHandler extends AbstractBizHandler {
     @Override
     protected void handSharkHttpRequest(ChannelHandlerContext ctx, FullHttpRequest request) {
         super.handSharkHttpRequest(ctx, request);
+    }
+
+    @Override
+    public void textWebSocketFrameHandler(ChannelHandlerContext ctx, TextWebSocketFrame frame) {
+        super.textWebSocketFrameHandler(ctx, frame);
     }
 }
