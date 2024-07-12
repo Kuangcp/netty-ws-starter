@@ -22,7 +22,7 @@
 <dependency>
     <groupId>com.github.kuangcp</groupId>
     <artifactId>netty-ws-spring-boot-starter</artifactId>
-    <version>1.0.2-RELEASE</version>
+    <version>1.0.5-RELEASE</version>
 </dependency>
 ```
 
