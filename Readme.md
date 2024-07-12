@@ -86,3 +86,8 @@ Netty作为通信基础，每个用户连接时通过前置的Nginx等SLB层负�
 1. 每个主机ip绑定一个Redis的list队列，存放了其他节点写入的消息数据，解决应用层向用户推送消息时，用户连接随机分散的问题。
 
 注意：Redis可替换成任意中心存储, 已由 CacheDao 抽象，应用层自己实现。
+
+## Dev
+
+mvn clean source:jar deploy -U -DskipTests=true
+

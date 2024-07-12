@@ -6,11 +6,11 @@
     <parent>
         <groupId>com.github.kuangcp</groupId>
         <artifactId>netty-ws</artifactId>
-        <version>1.0.4-RELEASE</version>
+        <version>1.0.5-SNAPSHOT</version>
     </parent>
 
     <artifactId>netty-ws-core</artifactId>
-    <version>1.0.4-RELEASE</version>
+    <version>1.0.5-SNAPSHOT</version>
 
     <dependencies>
         <dependency>
