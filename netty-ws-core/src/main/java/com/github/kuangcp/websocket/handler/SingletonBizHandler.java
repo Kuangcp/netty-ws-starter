@@ -15,14 +15,16 @@ import java.util.Objects;
 import java.util.concurrent.ScheduledExecutorService;
 
 /**
+ * 单机模式
+ *
  * @author <a href="https://github.com/kuangcp">Kuangcp</a> on 2021-05-18 08:33
  */
 @Slf4j
-public class SimpleBizHandler extends AbstractBizHandler {
-    public SimpleBizHandler(CacheDao cacheDao, UserDao userDao, WsServerConfig config, ScheduledExecutorService scheduler) {
+public class SingletonBizHandler extends AbstractBizHandler {
+    public SingletonBizHandler(CacheDao cacheDao, UserDao userDao, WsServerConfig config) {
         super(cacheDao, userDao, config);
 
-        this.schedulerPollQueueMsg(scheduler);
+//        this.schedulerPollQueueMsg(scheduler);
     }
 
     @Override

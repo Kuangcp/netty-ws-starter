@@ -1,7 +1,7 @@
 package com.github.kuangcp.websocket;
 
 import com.github.kuangcp.websocket.handler.AbstractBizHandler;
-import com.github.kuangcp.websocket.handler.SimpleBizHandler;
+import com.github.kuangcp.websocket.handler.SingletonBizHandler;
 import com.github.kuangcp.websocket.store.impl.CacheDaoImpl;
 import com.github.kuangcp.websocket.store.impl.UserDaoImpl;
 import io.netty.bootstrap.ServerBootstrap;
@@ -27,27 +27,27 @@ public class WsServer {
     private final AbstractBizHandler handler;
 
     /**
-     * 调试API
+     * 调试API 单机模式
      */
     public WsServer() {
         this.config = new WsServerConfig();
-        this.handler = new SimpleBizHandler(new CacheDaoImpl(), new UserDaoImpl(), config, Executors.newScheduledThreadPool(1));
+        this.handler = new SingletonBizHandler(new CacheDaoImpl(), new UserDaoImpl(), config);
     }
 
     /**
-     * 调试API
+     * 调试API 单机模式
      */
     public WsServer(int port, String logLevel) {
         this.config = new WsServerConfig().setPort(port).setLogLevel(logLevel);
-        this.handler = new SimpleBizHandler(new CacheDaoImpl(), new UserDaoImpl(), config, Executors.newScheduledThreadPool(1));
+        this.handler = new SingletonBizHandler(new CacheDaoImpl(), new UserDaoImpl(), config);
     }
 
     /**
-     * 调试API
+     * 调试API 单机模式
      */
     public WsServer(WsServerConfig config) {
         this.config = config;
-        this.handler = new SimpleBizHandler(new CacheDaoImpl(), new UserDaoImpl(), config, Executors.newScheduledThreadPool(1));
+        this.handler = new SingletonBizHandler(new CacheDaoImpl(), new UserDaoImpl(), config);
     }
 
     /**

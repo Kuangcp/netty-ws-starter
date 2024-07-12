@@ -16,8 +16,8 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class CacheDaoImpl implements CacheDao {
 
-    private Map<String, List<QueueMsg>> queueCache = new ConcurrentHashMap<>();
-    private Map<Long, String> userRoute = new ConcurrentHashMap<>();
+    private final Map<String, List<QueueMsg>> queueCache = new ConcurrentHashMap<>();
+    private final Map<Long, String> userRoute = new ConcurrentHashMap<>();
 
     @Override
     public void cacheRouteHost(Long userId, String host) {
