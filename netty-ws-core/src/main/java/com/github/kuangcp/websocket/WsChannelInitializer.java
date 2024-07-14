@@ -34,7 +34,9 @@ public class WsChannelInitializer extends ChannelInitializer<SocketChannel> {
         ChannelPipeline pipeline = ch.pipeline();
         pipeline.addLast("logging", new LoggingHandler(config.getLogLevel()));
         // 优先于业务Handler
-        pipeline.addLast("idle", new IdleStateHandler(config.getReaderIdleSec(), 0, 0, TimeUnit.SECONDS));
+        if (config.getReaderIdleSec() > 0) {
+            pipeline.addLast("idle", new IdleStateHandler(config.getReaderIdleSec(), 0, 0, TimeUnit.SECONDS));
+        }
         pipeline.addLast("http-codec", new HttpServerCodec());//设置解码器
         pipeline.addLast("aggregator", new HttpObjectAggregator(config.getMaxContentLength()));
         pipeline.addLast("http-chunked", new ChunkedWriteHandler());//用于大数据的分区传输

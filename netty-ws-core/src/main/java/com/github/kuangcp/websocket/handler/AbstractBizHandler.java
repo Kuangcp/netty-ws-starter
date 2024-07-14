@@ -54,7 +54,13 @@ public abstract class AbstractBizHandler extends SimpleChannelInboundHandler<Web
     private static final Map<String, AtomicInteger> idleMap = new ConcurrentHashMap<>();
 
     final WsServerConfig config;
+    /**
+     * 连接路由和消息队列
+     */
     final CacheDao cacheDao;
+    /**
+     * 用户认证
+     */
     final UserDao userDao;
 
     public AbstractBizHandler(WsServerConfig config) {
