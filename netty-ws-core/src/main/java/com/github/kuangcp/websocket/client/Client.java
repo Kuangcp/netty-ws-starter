@@ -1,14 +1,19 @@
 package com.github.kuangcp.websocket.client;
 
 import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.*;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelPipeline;
+import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.http.DefaultHttpHeaders;
 import io.netty.handler.codec.http.HttpClientCodec;
 import io.netty.handler.codec.http.HttpObjectAggregator;
-import io.netty.handler.codec.http.websocketx.*;
+import io.netty.handler.codec.http.websocketx.WebSocketClientHandshaker;
+import io.netty.handler.codec.http.websocketx.WebSocketClientHandshakerFactory;
+import io.netty.handler.codec.http.websocketx.WebSocketVersion;
 import io.netty.handler.codec.http.websocketx.extensions.compression.WebSocketClientCompressionHandler;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
@@ -62,10 +67,11 @@ public class Client {
             sslCtx = null;
         }
 
-        ScheduledExecutorService pool = Executors.newScheduledThreadPool(3);
+        int clientCnt = 4;
+        ScheduledExecutorService pool = Executors.newScheduledThreadPool(clientCnt*2);
 
         List<EventLoopGroup> groupList = new ArrayList<>();
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < clientCnt; i++) {
             EventLoopGroup group = new NioEventLoopGroup(1, pool);
             groupList.add(group);
             try {
@@ -73,17 +79,19 @@ public class Client {
                 // If you change it to V00, ping is not supported and remember to change
                 // HttpResponseDecoder to WebSocketHttpResponseDecoder in the pipeline.
                 WebSocketClientHandshaker shaker = WebSocketClientHandshakerFactory.newHandshaker(
-                        new URI(url + "?uid=1"), WebSocketVersion.V13, null,
+                        new URI(url + "?uid=" + i), WebSocketVersion.V13, null,
                         true, new DefaultHttpHeaders());
                 final WebSocketClientHandler handler = new WebSocketClientHandler(shaker, pool);
                 clientChannel(handler, group, sslCtx, host, port);
-            } finally {
+            } catch (Exception e) {
+                log.error("", e);
                 group.shutdownGracefully();
             }
         }
-        for (EventLoopGroup group : groupList) {
-            group.shutdownGracefully();
-        }
+//        TimeUnit.SECONDS.sleep(10);
+//        for (EventLoopGroup group : groupList) {
+//            group.shutdownGracefully();
+//        }
     }
 
     private static void clientChannel(WebSocketClientHandler handler, EventLoopGroup group, SslContext sslCtx,

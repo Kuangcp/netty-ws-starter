@@ -31,5 +31,5 @@ public class WsServerConfig {
     /**
      * 限制建立ws连接需通过认证
      */
-    private Boolean connectAuth;
+    private Boolean connectAuth = false;
 }

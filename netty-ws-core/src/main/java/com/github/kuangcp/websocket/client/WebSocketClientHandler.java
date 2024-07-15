@@ -10,7 +10,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
- *
  * @author Kuangcp
  * 2024-03-29 14:16
  */
@@ -42,7 +41,7 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) {
-        System.out.println("WebSocket Client disconnected!");
+        log.info("WebSocket Client disconnected!");
     }
 
     @Override
@@ -57,7 +56,7 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
                     ch.writeAndFlush(new TextWebSocketFrame("ping"));
                 }, 5, 2, TimeUnit.SECONDS);
             } catch (WebSocketHandshakeException e) {
-                System.out.println("WebSocket Client failed to connect");
+                log.info("WebSocket Client failed to connect");
                 handshakeFuture.setFailure(e);
             }
             return;
@@ -73,9 +72,9 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
         WebSocketFrame frame = (WebSocketFrame) msg;
         if (frame instanceof TextWebSocketFrame) {
             TextWebSocketFrame textFrame = (TextWebSocketFrame) frame;
-//            System.out.println("WebSocket Client received message: " + textFrame.text());
+            log.info("WebSocket Client received message: {}", textFrame.text());
         } else if (frame instanceof PongWebSocketFrame) {
-//            System.out.println("WebSocket Client received pong");
+            log.info("WebSocket Client received pong");
         } else if (frame instanceof CloseWebSocketFrame) {
             log.warn("WebSocket Client received closing");
             ch.close();

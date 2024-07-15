@@ -2,8 +2,6 @@ package com.github.kuangcp.websocket.handler;
 
 
 import com.github.kuangcp.websocket.WsServerConfig;
-import com.github.kuangcp.websocket.store.CacheDao;
-import com.github.kuangcp.websocket.store.UserDao;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.FullHttpRequest;
@@ -13,7 +11,6 @@ import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Objects;
-import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * 单机模式
@@ -40,10 +37,11 @@ public class SingletonBizHandler extends AbstractBizHandler {
     public void textWebSocketFrameHandler(ChannelHandlerContext ctx, TextWebSocketFrame frame) {
         String text = frame.text();
         if (Objects.equals(text, "ping")) {
-            System.out.println("text ping");
+            log.info("text ping");
             ctx.channel().writeAndFlush(new TextWebSocketFrame("pong"));
+            return;
         }
-        System.out.println(text);
+        log.info(text);
     }
 
     @Override
@@ -60,7 +58,7 @@ public class SingletonBizHandler extends AbstractBizHandler {
 
     @Override
     public void connectSuccess(Long userId) {
-
+        log.info("online userId={}", userId);
     }
 
 }
