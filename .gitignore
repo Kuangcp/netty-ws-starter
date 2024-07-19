@@ -4,6 +4,7 @@ target/
 !**/src/test/**/target/
 
 update.sh
+apps/
 
 ### IntelliJ IDEA ###
 .idea/
