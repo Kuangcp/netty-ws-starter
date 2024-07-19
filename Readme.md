@@ -1,5 +1,7 @@
 # netty websocket starter
 
+![](/arch.drawio.svg)
+
 ## Quick Start
 
 [Demo 项目](/netty-ws-server-demo)
