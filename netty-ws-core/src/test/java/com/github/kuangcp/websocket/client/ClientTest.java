@@ -9,6 +9,6 @@ public class ClientTest {
     static final String URL = System.getProperty("url", "ws://127.0.0.1:7094/ws");
 
     public static void main(String[] args) throws Exception {
-        Client.testConnect(URL);
+        Client.testConnect(URL, 10000);
     }
 }

@@ -37,7 +37,7 @@ import java.util.concurrent.ScheduledExecutorService;
 @Slf4j
 public class Client {
 
-    public static void testConnect(String url) throws URISyntaxException, SSLException, InterruptedException {
+    public static void testConnect(String url, int clientCnt) throws URISyntaxException, SSLException, InterruptedException {
         URI uri = new URI(url);
         String scheme = uri.getScheme() == null ? "ws" : uri.getScheme();
         final String host = uri.getHost() == null ? "127.0.0.1" : uri.getHost();
@@ -67,8 +67,7 @@ public class Client {
             sslCtx = null;
         }
 
-        int clientCnt = 4;
-        ScheduledExecutorService pool = Executors.newScheduledThreadPool(clientCnt*2);
+        ScheduledExecutorService pool = Executors.newScheduledThreadPool(clientCnt * 2);
 
         List<EventLoopGroup> groupList = new ArrayList<>();
         for (int i = 0; i < clientCnt; i++) {

@@ -54,7 +54,14 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
                 handshakeFuture.setSuccess();
                 pool.scheduleAtFixedRate(() -> {
                     ch.writeAndFlush(new TextWebSocketFrame("ping"));
-                }, 5, 2, TimeUnit.SECONDS);
+                    
+//                    StringBuilder txt = new StringBuilder();
+//                    for (int i = 0; i < 1024; i++) {
+//                        txt.append("ping");
+//                    }
+//                    ch.writeAndFlush(new TextWebSocketFrame(txt.toString()));
+
+                }, 5, 30, TimeUnit.SECONDS);
             } catch (WebSocketHandshakeException e) {
                 log.info("WebSocket Client failed to connect");
                 handshakeFuture.setFailure(e);
