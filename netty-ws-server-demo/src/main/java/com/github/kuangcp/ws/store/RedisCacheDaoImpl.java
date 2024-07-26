@@ -11,7 +11,9 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * 分布式缓存
@@ -43,6 +45,16 @@ public class RedisCacheDaoImpl implements CacheDao {
     @Override
     public String getRouteHost(Long userId) {
         return (String) redisTemplate.opsForHash().get(routeKey, userId);
+    }
+
+    @Override
+    public Map<Long, String> allUser() {
+        return redisTemplate.opsForHash().entries(routeKey);
+    }
+
+    @Override
+    public Set<Long> allUserId() {
+        return redisTemplate.opsForHash().keys(routeKey);
     }
 
     @Override

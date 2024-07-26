@@ -6,6 +6,7 @@ import com.github.kuangcp.websocket.store.CacheDao;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -32,6 +33,16 @@ public class CacheDaoMockImpl implements CacheDao {
     @Override
     public String getRouteHost(Long userId) {
         return userRoute.get(userId);
+    }
+
+    @Override
+    public Map<Long, String> allUser() {
+        return userRoute;
+    }
+
+    @Override
+    public Set<Long> allUserId() {
+        return userRoute.keySet();
     }
 
     @Override

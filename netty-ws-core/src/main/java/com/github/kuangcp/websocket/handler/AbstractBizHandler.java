@@ -180,11 +180,19 @@ public abstract class AbstractBizHandler extends SimpleChannelInboundHandler<Web
 //        log.info("客户端请求参数：{}", params);
 
         String userIdStr = params.get("uid");
+        if (StringUtils.isBlank(userIdStr)) {
+            userIdStr = params.get("userId");
+        }
         Long userId = WsSocketUtil.parseUserId(userIdStr);
         if (Objects.isNull(userId)) {
             throw new WebSocketHandshakeException("no auth");
         }
 
+        // 认证
+        if (Objects.isNull(userDao)) {
+            log.warn("NO userDao implement");
+            throw new WebSocketHandshakeException("no auth");
+        }
         if (BooleanUtils.isTrue(config.getConnectAuth())) {
             String token = params.get("token");
             if (StringUtils.isBlank(token)) {
