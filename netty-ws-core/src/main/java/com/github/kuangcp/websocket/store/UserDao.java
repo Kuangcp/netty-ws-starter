@@ -6,8 +6,17 @@ package com.github.kuangcp.websocket.store;
  */
 public interface UserDao {
 
+    /**
+     * @param userId 用户id
+     * @return true 合法用户 false 非法用户
+     */
     boolean validUserId(Long userId);
 
+    /**
+     * @param token  token
+     * @param userId 用户id
+     * @return true 合法用户 false 非法用户
+     */
     boolean validUserId(Long userId, String token);
 
 }

@@ -4,6 +4,7 @@ server:
 
 netty-ws:
   port: 5455
+  prefix: /ws
   max-content-length: 4096
   max-frame-size: 65536
   reader-idle-sec: 5

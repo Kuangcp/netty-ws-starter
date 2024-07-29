@@ -12,7 +12,17 @@ import lombok.experimental.Accessors;
 public class WsServerConfig {
 
     private int port = 7094;
-    private int maxContentLength = 65535;
+
+    private String prefix = "/ws";
+
+    /**
+     * HTTP握手请求时最大请求体字符串长度
+     */
+    private int maxContentLength = 4096;
+
+    /**
+     * 单条消息最大字符串字节数，需要按业务设置合理值，防范DOS攻击
+     */
     private int maxFrameSize = 65535;
     private String logLevel = "INFO";
 

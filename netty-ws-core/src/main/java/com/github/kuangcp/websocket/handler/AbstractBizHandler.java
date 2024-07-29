@@ -21,6 +21,7 @@ import io.netty.handler.codec.http.DefaultFullHttpResponse;
 import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpUtil;
+import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.CloseWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.PingWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.PongWebSocketFrame;
@@ -249,6 +250,8 @@ public abstract class AbstractBizHandler extends SimpleChannelInboundHandler<Web
             pingWebSocketFrameHandler(ctx, (PingWebSocketFrame) frame);
         } else if (frame instanceof TextWebSocketFrame) {
             textWebSocketFrameHandler(ctx, (TextWebSocketFrame) frame);
+        } else if (frame instanceof BinaryWebSocketFrame) {
+            binWebSocketFrameHandler(ctx, (BinaryWebSocketFrame) frame);
         } else if (frame instanceof CloseWebSocketFrame) {
             closeWebSocketFrameHandler(ctx, (CloseWebSocketFrame) frame);
         }
@@ -292,6 +295,10 @@ public abstract class AbstractBizHandler extends SimpleChannelInboundHandler<Web
      * 创建连接之后，客户端发送的消息都会在这里处理
      */
     protected void textWebSocketFrameHandler(ChannelHandlerContext ctx, TextWebSocketFrame frame) {
+        ctx.channel().writeAndFlush(frame.retain());
+    }
+
+    protected void binWebSocketFrameHandler(ChannelHandlerContext ctx, BinaryWebSocketFrame frame) {
         ctx.channel().writeAndFlush(frame.retain());
     }
 
