@@ -110,7 +110,7 @@ public abstract class AbstractBizHandler extends SimpleChannelInboundHandler<Web
 
     protected void schedulerPollQueueMsg(ScheduledExecutorService scheduler) {
         // 定时消费 需要推送的消息
-        String hostIp = IpUtils.getHostIp();
+        String hostIp = this.getServerId();
         scheduler.scheduleAtFixedRate(() -> {
             try {
                 List<QueueMsg> msgList = cacheDao.pollQueueMsg(hostIp);
@@ -225,7 +225,7 @@ public abstract class AbstractBizHandler extends SimpleChannelInboundHandler<Web
             }
         }
 
-        String hostIp = IpUtils.getHostIp();
+        String hostIp = getServerId();
         cacheDao.cacheRouteHost(userId, hostIp);
 
         userMap.put(userId, ctx.channel());
@@ -279,6 +279,13 @@ public abstract class AbstractBizHandler extends SimpleChannelInboundHandler<Web
         } else {
             super.userEventTriggered(ctx, evt);
         }
+    }
+
+    protected String getServerId() {
+        if (StringUtils.isNoneBlank(config.getServerId())) {
+            return config.getServerId();
+        }
+        return IpUtils.getHostIp();
     }
 
     /**

@@ -16,6 +16,8 @@ public class WsServerConfig {
 
     private String prefix = "/ws";
 
+    private String serverId = "";
+
     /**
      * HTTP握手请求时最大请求体字符串长度
      */
