@@ -1,8 +1,17 @@
 package com.github.kuangcp.websocket.client;
 
-import io.netty.channel.*;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelPromise;
+import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.FullHttpResponse;
-import io.netty.handler.codec.http.websocketx.*;
+import io.netty.handler.codec.http.websocketx.CloseWebSocketFrame;
+import io.netty.handler.codec.http.websocketx.PongWebSocketFrame;
+import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
+import io.netty.handler.codec.http.websocketx.WebSocketClientHandshaker;
+import io.netty.handler.codec.http.websocketx.WebSocketFrame;
+import io.netty.handler.codec.http.websocketx.WebSocketHandshakeException;
 import io.netty.util.CharsetUtil;
 import lombok.extern.slf4j.Slf4j;
 
@@ -52,16 +61,8 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
                 shaker.finishHandshake(ch, (FullHttpResponse) msg);
                 log.info("WebSocket Client connected!");
                 handshakeFuture.setSuccess();
-                pool.scheduleAtFixedRate(() -> {
-                    ch.writeAndFlush(new TextWebSocketFrame("ping"));
-                    
-//                    StringBuilder txt = new StringBuilder();
-//                    for (int i = 0; i < 1024; i++) {
-//                        txt.append("ping");
-//                    }
-//                    ch.writeAndFlush(new TextWebSocketFrame(txt.toString()));
 
-                }, 5, 30, TimeUnit.SECONDS);
+                this.handSharkPost(ctx);
             } catch (WebSocketHandshakeException e) {
                 log.info("WebSocket Client failed to connect");
                 handshakeFuture.setFailure(e);
@@ -78,14 +79,29 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
 
         WebSocketFrame frame = (WebSocketFrame) msg;
         if (frame instanceof TextWebSocketFrame) {
-            TextWebSocketFrame textFrame = (TextWebSocketFrame) frame;
-            log.info("WebSocket Client received message: {}", textFrame.text());
+            this.handleTextMsg(ctx, (TextWebSocketFrame) frame);
         } else if (frame instanceof PongWebSocketFrame) {
             log.info("WebSocket Client received pong");
         } else if (frame instanceof CloseWebSocketFrame) {
             log.warn("WebSocket Client received closing");
             ch.close();
         }
+    }
+
+    public void handSharkPost(ChannelHandlerContext ctx) {
+        pool.scheduleAtFixedRate(() -> {
+            ctx.channel().writeAndFlush(new TextWebSocketFrame("ping"));
+//                    StringBuilder txt = new StringBuilder();
+//                    for (int i = 0; i < 1024; i++) {
+//                        txt.append("ping");
+//                    }
+//                    ch.writeAndFlush(new TextWebSocketFrame(txt.toString()));
+
+        }, 5, 30, TimeUnit.SECONDS);
+    }
+
+    public void handleTextMsg(ChannelHandlerContext ctx, TextWebSocketFrame frame) {
+        log.info("WebSocket Client received message: {}", frame.text());
     }
 
     @Override

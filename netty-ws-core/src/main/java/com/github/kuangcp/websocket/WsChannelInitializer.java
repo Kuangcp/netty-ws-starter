@@ -1,7 +1,5 @@
 package com.github.kuangcp.websocket;
 
-import com.github.kuangcp.websocket.constants.Const;
-import io.netty.channel.AdaptiveRecvByteBufAllocator;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
@@ -24,10 +22,6 @@ public class WsChannelInitializer extends ChannelInitializer<SocketChannel> {
 
     private final WsServer server;
 
-
-    /**
-     * @see AdaptiveRecvByteBufAllocator.HandleImpl#record(int) 实现扩缩容读写ByteBuf
-     */
     @Override
     protected void initChannel(SocketChannel ch) {
         WsServerConfig config = server.getConfig();
@@ -45,7 +39,7 @@ public class WsChannelInitializer extends ChannelInitializer<SocketChannel> {
 
         // checkStartsWith 为true 支持路径带参数
         // maxFrameSize 设置的是最大可申请的ByteBuf，实际上使用时是按需申请和回收内存
-        pipeline.addLast("proto", new WebSocketServerProtocolHandler(Const.webSocketPath,
+        pipeline.addLast("proto", new WebSocketServerProtocolHandler(config.getPrefix(),
                 HttpHeaderNames.WEBSOCKET_PROTOCOL.toString(), true, config.getMaxFrameSize(),
                 false, true));
     }

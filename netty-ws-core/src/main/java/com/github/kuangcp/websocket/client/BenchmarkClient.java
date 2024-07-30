@@ -1,20 +1,11 @@
 package com.github.kuangcp.websocket.client;
 
-import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelPipeline;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.SocketChannel;
-import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.http.DefaultHttpHeaders;
-import io.netty.handler.codec.http.HttpClientCodec;
-import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.websocketx.WebSocketClientHandshaker;
 import io.netty.handler.codec.http.websocketx.WebSocketClientHandshakerFactory;
 import io.netty.handler.codec.http.websocketx.WebSocketVersion;
-import io.netty.handler.codec.http.websocketx.extensions.compression.WebSocketClientCompressionHandler;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
@@ -35,7 +26,7 @@ import java.util.concurrent.ScheduledExecutorService;
  * 2024-03-29 14:13
  */
 @Slf4j
-public class Client {
+public class BenchmarkClient {
 
     public static void testConnect(String url, int clientCnt) throws URISyntaxException, SSLException, InterruptedException {
         URI uri = new URI(url);
@@ -95,27 +86,7 @@ public class Client {
 
     private static void clientChannel(WebSocketClientHandler handler, EventLoopGroup group, SslContext sslCtx,
                                       String host, int port) throws InterruptedException {
-        Bootstrap b = new Bootstrap();
-        b.group(group)
-                .channel(NioSocketChannel.class)
-                .handler(new ChannelInitializer<SocketChannel>() {
-                    @Override
-                    protected void initChannel(SocketChannel ch) {
-                        ChannelPipeline p = ch.pipeline();
-                        if (sslCtx != null) {
-                            p.addLast(sslCtx.newHandler(ch.alloc(), host, port));
-                        }
-                        p.addLast(
-                                new HttpClientCodec(),
-                                new HttpObjectAggregator(8192),
-                                WebSocketClientCompressionHandler.INSTANCE,
-                                handler);
-                    }
-                });
-
-        Channel ch = b.connect(host, port).sync().channel();
-        handler.handshakeFuture().sync();
-
+        WsClient.clientChannel(handler, group, sslCtx, host, port);
 //        BufferedReader console = new BufferedReader(new InputStreamReader(System.in));
 //        while (true) {
 //            String msg = console.readLine();

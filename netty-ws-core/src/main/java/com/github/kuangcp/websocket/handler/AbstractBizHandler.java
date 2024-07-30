@@ -2,7 +2,6 @@ package com.github.kuangcp.websocket.handler;
 
 import com.github.kuangcp.websocket.WsMsgService;
 import com.github.kuangcp.websocket.WsServerConfig;
-import com.github.kuangcp.websocket.constants.Const;
 import com.github.kuangcp.websocket.msg.QueueMsg;
 import com.github.kuangcp.websocket.store.CacheDao;
 import com.github.kuangcp.websocket.store.UserDao;
@@ -190,29 +189,27 @@ public abstract class AbstractBizHandler extends SimpleChannelInboundHandler<Web
         }
 
         // 认证
-        if (Objects.isNull(userDao)) {
-            log.warn("NO userDao implement");
-            throw new WebSocketHandshakeException("no auth");
-        }
-        if (BooleanUtils.isTrue(config.getConnectAuth())) {
-            String token = params.get("token");
-            if (StringUtils.isBlank(token)) {
-                HttpHeaders headers = request.trailingHeaders();
-                token = headers.get("token");
-            }
-            if (StringUtils.isBlank(token)) {
-                log.warn("no auth userId={}", userId);
-                throw new WebSocketHandshakeException("no auth");
-            }
+        if (Objects.nonNull(userDao)) {
+            if (BooleanUtils.isTrue(config.getConnectAuth())) {
+                String token = params.get("token");
+                if (StringUtils.isBlank(token)) {
+                    HttpHeaders headers = request.trailingHeaders();
+                    token = headers.get("token");
+                }
+                if (StringUtils.isBlank(token)) {
+                    log.warn("no auth userId={}", userId);
+                    throw new WebSocketHandshakeException("no auth");
+                }
 
-            if (!userDao.validUserId(userId, token)) {
-                log.warn("invalid user: userId={} token={}", userId, token);
-                throw new WebSocketHandshakeException("no auth");
-            }
-        } else {
-            if (!userDao.validUserId(userId)) {
-                log.warn("invalid user: userId={}", userId);
-                throw new WebSocketHandshakeException("no auth");
+                if (!userDao.validUserId(userId, token)) {
+                    log.warn("invalid user: userId={} token={}", userId, token);
+                    throw new WebSocketHandshakeException("no auth");
+                }
+            } else {
+                if (!userDao.validUserId(userId)) {
+                    log.warn("invalid user: userId={}", userId);
+                    throw new WebSocketHandshakeException("no auth");
+                }
             }
         }
 
@@ -236,9 +233,9 @@ public abstract class AbstractBizHandler extends SimpleChannelInboundHandler<Web
         connectSuccess(userId);
 
         // 判断请求路径是否跟配置中的一致
-        if (Const.webSocketPath.equals(WsSocketUtil.getBasePath(uri))) {
+        if (config.getPrefix().equals(WsSocketUtil.getBasePath(uri))) {
             // 因为有可能携带了参数，导致客户端一直无法返回握手包，因此在校验通过后，重置请求路径
-            request.setUri(Const.webSocketPath);
+            request.setUri(config.getPrefix());
         } else {
             throw new WebSocketHandshakeException("invalid");
         }

@@ -1,5 +1,6 @@
 package com.github.kuangcp.websocket;
 
+import io.netty.channel.AdaptiveRecvByteBufAllocator;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -22,6 +23,8 @@ public class WsServerConfig {
 
     /**
      * 单条消息最大字符串字节数，需要按业务设置合理值，防范DOS攻击
+     *
+     * @see AdaptiveRecvByteBufAllocator.HandleImpl#record(int) 实现扩缩容读写ByteBuf
      */
     private int maxFrameSize = 65535;
     private String logLevel = "INFO";
